@@ -27,21 +27,21 @@ Requirements: `ffmpeg` and `Pillow` (already in `requirements.txt`).
 When you upload all three files and click **Process Files**, you should see:
 
 ```
-✅ Processing complete in ~45s | 15 slides | 6 frames | 72 chunks indexed
+✅ Processing complete in 23.8s | 21 slides | 12 frames | 198 chunks indexed
 ```
+
+Verified on JarvisLabs NVIDIA A100-PCIE-40GB (2026-05-28).
 
 Detailed breakdown:
 
 | Component | Expected value |
 |-----------|----------------|
-| Slides extracted | 15 pages |
-| Audio duration | ~3 min |
-| Transcript segments | ~30 |
-| Video frames (30s interval) | ~6 |
+| Slides extracted | 21 pages |
+| Video frames (30s interval) | 12 |
 | Slide transitions detected | ~3 |
-| ChromaDB chunks indexed | 60–80 |
-| Processing time (A100) | ~40–60s |
-| Processing time (CPU) | ~5–10 min |
+| ChromaDB chunks indexed | 198 |
+| Processing time (A100) | ~24s |
+| Processing time (CPU) | ~5–8 min |
 
 ## The three demo questions
 

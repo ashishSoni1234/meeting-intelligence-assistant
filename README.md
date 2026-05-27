@@ -181,11 +181,19 @@ Each answer above is **unanswerable from any single input** — it requires comb
 
 ## Screenshots
 
-> Add your actual JarvisLabs screenshots here after running the app.
+Deployed and tested on **JarvisLabs A100-PCIE-40GB** at `7a4d913d1b75039de8.gradio.live`.
 
-| Upload & Process | Q&A with Grounded Answer | Meeting Summary |
-|-----------------|--------------------------|-----------------|
-| ![Upload tab](assets/screenshot_upload.png) | ![QA tab](assets/screenshot_qa.png) | ![Summary tab](assets/screenshot_summary.png) |
+**Upload & Process** — PDF (21 slides) + Video processed in 23.8s, 198 chunks indexed:
+
+![Upload & Process tab showing PDF + Video processing complete in 23.8s with 21 slides, 12 frames, 198 chunks indexed on NVIDIA A100](assets/screenshot_upload.png)
+
+**Ask Questions** — Cross-modal answer with citations (timestamps + slide numbers), relevant slide image, and video frame shown side by side:
+
+![Q&A tab showing grounded answer with citations, relevant slide image from PDF, and video frame from the recording](assets/screenshot_qa.png)
+
+**Meeting Summary** — Auto-generated structured summary with KEY DECISIONS, ACTION ITEMS, and TOPIC TIMELINE all with slide references:
+
+![Meeting Summary tab showing structured output with key decisions, action items, and topic timeline referencing slide numbers and timestamps](assets/screenshot_summary.png)
 
 ---
 
@@ -206,11 +214,10 @@ chmod +x generate_sample_video.sh
 ```
 
 After processing these three files you should see approximately:
-- **Slides:** 15 pages extracted to `extracted_slides/`
-- **Audio:** ~3 min transcribed, ~30 segments indexed
-- **Video frames:** ~6 frames at 30s interval
-- **ChromaDB:** ~60–80 chunks indexed
-- **Processing time:** ~45s on A100, ~8 min on CPU
+- **Slides:** 21 pages extracted to `extracted_slides/`
+- **Video frames:** 12 frames at 30s interval
+- **ChromaDB:** 198 chunks indexed
+- **Processing time:** ~24s on A100 (verified), ~5–8 min on CPU
 
 ---
 
