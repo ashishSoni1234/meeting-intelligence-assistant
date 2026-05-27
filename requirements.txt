@@ -1,0 +1,67 @@
+# Meeting Intelligence Assistant - Requirements
+# Python 3.10-3.12 | CUDA 12.1+ for GPU support
+
+# Core ML Framework
+torch==2.2.2
+torchvision==0.17.2
+torchaudio==0.17.2
+
+# Transformers & Model Loading
+transformers==4.44.2
+accelerate==0.33.0
+bitsandbytes==0.43.3
+sentencepiece==0.2.0
+tokenizers==0.19.1
+huggingface-hub==0.24.6
+safetensors==0.4.4
+
+# Whisper Transcription
+faster-whisper==1.0.3
+ctranslate2==4.4.0
+
+# PDF Processing
+PyMuPDF==1.24.9
+pdfplumber==0.11.4
+Pillow==10.4.0
+pdf2image==1.17.0
+
+# Video Processing
+opencv-python==4.10.0.84
+imageio==2.35.1
+imageio-ffmpeg==0.5.1
+moviepy==1.0.3
+
+# Vector Database
+chromadb==0.5.5
+sentence-transformers==3.0.1
+
+# API Backend
+fastapi==0.112.2
+uvicorn==0.30.6
+python-multipart==0.0.9
+aiofiles==24.1.0
+httpx==0.27.0
+
+# Gradio UI
+gradio==4.42.0
+
+# Utilities
+numpy==1.26.4
+scipy==1.14.0
+python-dotenv==1.0.1
+pydantic==2.8.2
+pydantic-settings==2.4.0
+tqdm==4.66.5
+loguru==0.7.2
+tenacity==8.5.0
+requests==2.32.3
+
+# Optional: Speaker Diarization
+pyannote.audio==3.3.2
+speechbrain==1.0.0
+
+# Groq fallback LLM
+groq==0.9.0
+
+# Image handling
+matplotlib==3.9.2

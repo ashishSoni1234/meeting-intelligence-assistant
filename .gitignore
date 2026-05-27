@@ -1,0 +1,48 @@
+# Secrets — never commit
+.env
+
+# Generated directories
+chroma_db/
+extracted_frames/
+extracted_slides/
+models/
+logs/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Test artifacts
+test_screenshots/
+/tmp/meeting_test_screenshots/
+
+# Python packaging
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Large model weights (downloaded at runtime)
+*.bin
+*.safetensors
+*.pt
+*.ckpt
