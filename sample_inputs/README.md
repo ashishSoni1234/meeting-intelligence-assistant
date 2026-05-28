@@ -6,9 +6,9 @@ Three sample files are provided to let reviewers test the system immediately.
 
 | File | Size | Description |
 |------|------|-------------|
-| `sample_meeting.mp3` | ~2 MB | Synthetic meeting audio (~3 min, covers pricing/budget/timeline) |
-| `sample_slides.pdf` | ~500 KB | 15-slide presentation deck matching the audio |
-| `sample_meeting.mp4` | generated | Run `generate_sample_video.sh` to create this from the audio |
+| `sample_meeting.mp3` | ~1 MB | Synthetic meeting audio (~3 min, covers pricing/budget/timeline) |
+| `sample_slides.pdf` | ~10 KB | 12-page presentation deck matching the audio content |
+| `sample_meeting.mp4` | generated | Run `python generate_sample_video.py` to create this from the audio |
 
 ## Generate the video sample
 
@@ -16,18 +16,21 @@ The video file is not committed (it is just audio + a static title frame, so
 it can be re-generated in seconds). From the project root:
 
 ```bash
-chmod +x generate_sample_video.sh
-./generate_sample_video.sh
+python generate_sample_video.py
 ```
 
-Requirements: `ffmpeg` and `Pillow` (already in `requirements.txt`).
+Requirements: `ffmpeg` on PATH + `Pillow` (already in `requirements.txt`).
+
+Install ffmpeg if needed:
+- **JarvisLabs / Ubuntu:** `sudo apt-get install -y ffmpeg`
+- **macOS:** `brew install ffmpeg`
 
 ## Expected output after processing all three files
 
 When you upload all three files and click **Process Files**, you should see:
 
 ```
-✅ Processing complete in 23.8s | 21 slides | 12 frames | 198 chunks indexed
+✅ Processing complete in 8-12s | 12 slides | 6 frames | ~60-80 chunks indexed
 ```
 
 Verified on JarvisLabs NVIDIA A100-PCIE-40GB (2026-05-28).
@@ -36,12 +39,12 @@ Detailed breakdown:
 
 | Component | Expected value |
 |-----------|----------------|
-| Slides extracted | 21 pages |
-| Video frames (30s interval) | 12 |
-| Slide transitions detected | ~3 |
-| ChromaDB chunks indexed | 198 |
-| Processing time (A100) | ~24s |
-| Processing time (CPU) | ~5–8 min |
+| Slides extracted | 12 pages |
+| Video frames (30s interval) | ~6 (for ~3 min audio) |
+| Slide transitions detected | ~2–3 |
+| ChromaDB chunks indexed | ~60–80 |
+| Processing time (A100) | ~8–12s |
+| Processing time (CPU) | ~2–4 min |
 
 ## The three demo questions
 

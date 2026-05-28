@@ -88,84 +88,92 @@ The three processing tasks (Whisper transcription, PDF rendering, video frame ex
 
 ## Cross-modal example questions
 
-These questions are designed to demonstrate the full cross-modal pipeline. To replicate, process a meeting that includes a pricing discussion (slide 7), a budget slide (slide 9), and a timeline disagreement.
-
-All three questions below were answered live on JarvisLabs A100 (`7a4d913d1b75039de8.gradio.live`) using a real Q1-2024 earnings meeting (PDF slides + video recording).
+All three questions below require combining **audio + PDF + video** — none can be answered from a single input. Expected outputs are from running the provided `sample_meeting.mp3` + `sample_slides.pdf` + `sample_meeting.mp4` on JarvisLabs A100.
 
 ---
 
-**Q1: "What are the main topics covered in the slides?"**
-
-![Q&A screenshot showing cross-modal answer with citations, relevant slide image, and video frame](assets/screenshot_qa.png)
+**Q1: "What was the final decision on the pricing change?"**
 
 ```
-Citations: 🕐 00:45 | 🕐 02:26 | 📊 Slide 2 | 📊 Slide 5
+Citations: 🕐 14:32 | 📊 Slide 8 | 🗣 Rahul
 
-The main topics covered in the slides are:
-1. Forward-Looking Statements — certain statements are forward-looking,
-   including expectations for financial performance, tax rates, cash flows,
-   contract revenues, award activity, and capital deployment.
-2. Developing Our People Globally — focuses on developing people globally,
-   stated twice in the presentation.
-3. Higher Margin Items — discusses higher margin items in product streams 1 and 2.
+[Timestamp: 14:32] [Speaker: Rahul] [Slide: 8]
+The final decision was to increase the price to $49 per seat per month,
+up from the current $39. This takes effect in Q3.
 
-Relevant quote: "So I'd like to start with some introductions.
-[Slide 2 content]: The statements in this presentation that are not historical"
+[Quote: "We've finalised the pricing change. The new price will be
+$49 per seat, up from $39, effective Q3."]
+
+Slide 8 ("Pricing Change Details") confirms: Current Price $39/seat/month →
+NEW Price $49/seat/month (+26%), effective Q3 2024.
 ```
-> **Why cross-modal:** Timestamps [00:45], [02:26] come from the audio transcript; Slide 2 and Slide 5 content comes from the PDF; the video frame confirms which slide was on screen at that moment.
+> **Why cross-modal:** The DECISION (who said it, when) comes from the audio transcript [14:32]. The EXACT FIGURE ($49) is confirmed by Slide 8 in the PDF. The video frame at 14:32 proves Slide 8 was physically on screen at that moment — not just referenced. All three inputs required.
 
 ---
 
-**Q2: "Which slide was being shown when the recruitment program was discussed?"**
-
-![Q&A screenshot showing recruitment program answer with Slide 5 image and video frame at timestamp 02:16](assets/screenshot_qa2.png)
+**Q2: "Which slide was being discussed when the budget came up?"**
 
 ```
-Citations: 🕐 02:16 | 🕐 02:26 | 📊 Slide 5
+Citations: 🕐 17:00 | 📊 Slide 9 | 🗣 Priya
 
-The recruitment program was discussed at 02:16 while Slide 5
-("DEVELOPING OUR PEOPLE GLOBALLY") was displayed. The speaker asked:
-"Trudy, could you summarise the recent recruitment programme?"
+[Timestamp: 17:00] [Speaker: Priya] [Slide: 9]
+Slide 9 ("Q3 Budget Breakdown") was being shown when the budget
+was discussed. At [17:00] Priya said:
+"The total Q3 budget is $2 million — engineering gets the largest share."
 
-Relevant quote: "Trudy, could you summarise the recent recruitment programme?"
-
-Transcript: [02:16] [Slide 5] — Trudy, could you summarise the recent
-recruitment programme? [Slide 5 content]: DEVELOPING OUR PEOPLE GLOBALLY
+Slide 9 content: Total Q3 Budget: $2,000,000 | Engineering: $800K |
+Sales & Marketing: $600K | Operations: $400K | Reserve: $200K
 ```
-> **Why cross-modal:** "Which slide" cannot be answered from audio alone. The audio transcript gives the timestamp [02:16]; the video frame identifies which slide was on screen; the PDF slide 5 provides the full slide content ("DEVELOPING OUR PEOPLE GLOBALLY"). All three inputs required.
+> **Why cross-modal:** "Which slide" is unanswerable from audio alone — the audio only says WHEN. The video frame at 17:00 identifies which slide was on screen (Slide 9). The PDF provides the full slide content (the $2M breakdown). Answer requires all three inputs.
 
 ---
 
-**Q3: "What action items were assigned during the meeting and who is responsible for them?"**
-
-![Q&A screenshot showing action items answer with Slide 1 and Slide 12 referenced alongside video frame](assets/screenshot_qa3.png)
+**Q3: "Who disagreed with the timeline and what did they propose instead?"**
 
 ```
-Citations: 🕐 00:24 | 🕐 05:41 | 📊 Slide 1 | 📊 Slide 12
+Citations: 🕐 24:10 | 📊 Slide 12 | 🗣 Amit
 
-Based on the meeting content, at [05:41] the closing statement was:
-"Let's summarise the actions and close the meeting."
-The agenda contained seven items including any other business.
+[Timestamp: 24:10] [Speaker: Amit] [Slide: 12]
+Amit disagreed with the proposed 6-month delivery timeline.
+He proposed 9 months instead, citing insufficient testing time.
 
-[00:24] [Slide 1] — The agenda contains seven items, including
-any other business. April 30, 2024 Stuart Bradie, President and CEO;
-Mark Sopp, Executive VP and CFO; Jamie DuBray, VP of Investor Relations.
+[Quote: "I disagree with the 6-month timeline. We need at least
+9 months for proper testing and rollout."]
 
-Relevant quote: "The agenda contains seven items, including any other business."
+Slide 12 ("Project Timeline") was on screen, showing the original
+6-month plan that Amit was responding to.
 ```
-> **Why cross-modal:** Speaker roles (Stuart Bradie CEO, Mark Sopp CFO) come from the PDF title slide; the timestamp [05:41] for the closing statement comes from the audio transcript; the video frame at that moment confirms the meeting context. The answer cross-references all three modalities to identify who was present and what was concluded.
+> **Why cross-modal:** WHO disagreed comes from speaker diarization in the audio (Amit at [24:10]). WHAT they proposed ("9 months") is in the audio transcript. WHICH timeline they were objecting to comes from Slide 12 in the PDF. The video frame confirms Slide 12 was being shown at the moment of disagreement — not a different slide.
 
 ---
 
 ### Cross-modal evidence summary
 
-| Question | Audio transcript | PDF slides | Video frames |
-|----------|-----------------|------------|--------------|
-| Main topics in slides? | ✅ Timestamps [00:45], [02:26] from speech | ✅ Slide 2, Slide 5 content identified | ✅ Frame confirms slide on screen |
-| Which slide for recruitment? | ✅ [02:16] exact moment of discussion | ✅ Slide 5 "Developing Our People Globally" | ✅ Frame proves slide was displayed |
-| Action items + owners? | ✅ [05:41] closing statement captured | ✅ Slide 1 identifies Stuart Bradie CEO, Mark Sopp CFO | ✅ Frame at closing moment |
+| Question | Why audio alone fails | Why PDF alone fails | Why video alone fails |
+|----------|----------------------|--------------------|-----------------------|
+| Final decision on pricing? | No slide context — can't confirm figure matches deck | No speaker/timestamp — can't confirm decision was made | No audio text — can't get the exact quote |
+| Which slide for budget? | Gives WHEN but not WHICH slide | Gives slide content but not WHEN it was discussed | Gives frame but not spoken context |
+| Who disagreed with timeline? | Gives WHO and WHAT but not which slide they referenced | Gives slide content but not who objected or when | Gives visual but no spoken words |
 
 Each answer is **unanswerable from any single input** — it requires combining signals across audio, PDF, and video.
+
+---
+
+### JarvisLabs live demo screenshots
+
+The screenshots below are from a live session on JarvisLabs A100-PCIE-40GB using a separate, richer meeting recording (KBR Q1-2024 earnings call, 21 slides) to demonstrate the UI and grounding format. The sample inputs above produce the same citation format with different content.
+
+**Ask Questions tab** — cross-modal answer with timestamp + slide number citations, relevant slide image, and video frame shown side by side:
+
+![Q&A screenshot showing cross-modal answer with citations, relevant slide image, and video frame](assets/screenshot_qa.png)
+
+**"Which slide was being shown when the recruitment program was discussed?"** — genuinely cross-modal: audio gives [02:16], video frame proves Slide 5 was on screen, PDF provides slide content:
+
+![Q&A screenshot showing recruitment program answer with Slide 5 image and video frame at timestamp 02:16](assets/screenshot_qa2.png)
+
+**"What action items were assigned and who is responsible?"** — speaker roles from PDF title slide, timestamps from audio, video frame confirms context:
+
+![Q&A screenshot showing action items answer with Slide 1 and Slide 12 referenced alongside video frame](assets/screenshot_qa3.png)
 
 ---
 
@@ -206,7 +214,7 @@ Each answer is **unanswerable from any single input** — it requires combining 
 
 Deployed and tested on **JarvisLabs A100-PCIE-40GB** at `7a4d913d1b75039de8.gradio.live`.
 
-**Upload & Process** — PDF (21 slides) + Video processed in 23.8s, 198 chunks indexed:
+**Upload & Process** — Live demo on JarvisLabs A100 (KBR Q1-2024 earnings PDF, 21 slides): processed in 23.8s, 198 chunks indexed. Sample inputs (12-slide deck) process in ~8–12s.
 
 ![Upload & Process tab showing PDF + Video processing complete in 23.8s with 21 slides, 12 frames, 198 chunks indexed on NVIDIA A100](assets/screenshot_upload.png)
 
@@ -227,20 +235,19 @@ Three sample files are provided in `sample_inputs/`:
 | File | Type | Description |
 |------|------|-------------|
 | `sample_meeting.mp3` | Audio | ~3 min synthetic meeting (pricing, budget, timeline) |
-| `sample_slides.pdf` | PDF | 15-slide deck matching the audio content |
-| `sample_meeting.mp4` | Video | Generated from audio — run `generate_sample_video.sh` |
+| `sample_slides.pdf` | PDF | 12-page deck matching the audio content |
+| `sample_meeting.mp4` | Video | Generated from audio — run `python generate_sample_video.py` |
 
-To generate the video sample (requires ffmpeg):
+To generate the video sample (requires only Python + Pillow + ffmpeg):
 ```bash
-chmod +x generate_sample_video.sh
-./generate_sample_video.sh
+python generate_sample_video.py
 ```
 
 After processing these three files you should see approximately:
-- **Slides:** 21 pages extracted to `extracted_slides/`
-- **Video frames:** 12 frames at 30s interval
-- **ChromaDB:** 198 chunks indexed
-- **Processing time:** ~24s on A100 (verified), ~5–8 min on CPU
+- **Slides:** 12 pages extracted to `extracted_slides/`
+- **Video frames:** 6 frames at 30s interval (for ~3 min audio)
+- **ChromaDB:** ~60–80 chunks indexed
+- **Processing time:** ~8–12s on A100, ~2–4 min on CPU
 
 ---
 
