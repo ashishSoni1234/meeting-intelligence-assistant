@@ -7,13 +7,14 @@ torchvision==0.17.2
 torchaudio==0.17.2
 
 # Transformers & Model Loading
-transformers==4.44.2
-accelerate==0.33.0
-bitsandbytes==0.43.3
+# transformers>=4.51.0 required for Qwen2_5OmniForConditionalGeneration
+transformers>=4.51.0
+accelerate>=0.34.0
+bitsandbytes>=0.43.3
 sentencepiece==0.2.0
-tokenizers==0.19.1
-huggingface-hub==0.24.6
-safetensors==0.4.4
+tokenizers>=0.21.0
+huggingface-hub>=0.27.0
+safetensors>=0.4.4
 
 # Whisper Transcription
 faster-whisper==1.0.3

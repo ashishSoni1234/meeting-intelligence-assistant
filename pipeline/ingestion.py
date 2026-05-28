@@ -438,16 +438,21 @@ class IngestionPipeline:
 
             return linear_estimator
 
-        # Map each transition to a slide number
-        # Slide 1 starts at t=0; each transition advances to next slide
+        # Distribute total_slides proportionally across transition segments.
+        # e.g. 21 slides + 8 transitions = 9 segments, ~2.3 slides per segment.
+        # This prevents the old bug where slide count was capped at transitions+1.
+        n_segments = len(transitions) + 1
+        slides_per_segment = total_slides / n_segments
+
         def transition_estimator(t: float) -> int:
-            slide = 1
+            segment = 0
             for transition_t in transitions:
                 if t >= transition_t:
-                    slide += 1
+                    segment += 1
                 else:
                     break
-            return min(slide, total_slides)
+            slide = int(segment * slides_per_segment) + 1
+            return max(1, min(slide, total_slides))
 
         return transition_estimator
 

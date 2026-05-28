@@ -94,8 +94,7 @@ All three questions below are answered using the provided sample inputs (`Q1-202
 
 **Q1: "Which slide was being shown when the recruitment program was discussed?"**
 
-![Q&A screenshot showing recruitment program answer with Slide 5 image and video frame at timestamp 02:16](assets/screenshot_qa2.png)
-
+**Model output (actual response from Qwen2.5-Omni, sample_inputs/meeting.mp4 + Q1-2024-Earnings-Presentation.pdf):**
 ```
 Citations: 🕐 02:16 | 📊 Slide 5
 
@@ -106,14 +105,15 @@ The speaker asked: "Trudy, could you summarise the recent recruitment programme?
 
 [Slide 5 content]: DEVELOPING OUR PEOPLE GLOBALLY
 ```
+
+![Q&A screenshot showing recruitment program answer with Slide 5 image and video frame at timestamp 02:16](assets/screenshot_qa2.png)
 > **Why cross-modal:** The audio transcript gives WHEN recruitment was mentioned [02:16]. The video frame proves WHICH slide was on screen at that exact moment. The PDF gives the full text of Slide 5. Audio alone cannot tell you which slide; PDF alone cannot tell you when; video alone has no spoken words.
 
 ---
 
 **Q2: "Who were the presenters at this meeting and what roles do the slides assign them?"**
 
-![Q&A screenshot showing cross-modal answer with citations, relevant slide image, and video frame](assets/screenshot_qa.png)
-
+**Model output (actual response from Qwen2.5-Omni, sample_inputs/meeting.mp4 + Q1-2024-Earnings-Presentation.pdf):**
 ```
 Citations: 🕐 00:24 | 📊 Slide 1 | 🗣 Stuart Bradie
 
@@ -126,14 +126,15 @@ The presenters introduced at the start of the meeting were:
 Slide 1 lists all three with their exact titles and the date: April 30, 2024.
 The video frame at [00:24] confirms Slide 1 was on screen during introductions.
 ```
+
+![Q&A screenshot showing cross-modal answer with citations, relevant slide image, and video frame](assets/screenshot_qa.png)
 > **Why cross-modal:** WHO was speaking at [00:24] comes from audio (speaker diarization identifies Stuart Bradie's voice). The TITLES (CEO, CFO) come from PDF Slide 1 — the audio never spells out the full titles. The video frame confirms Slide 1 was on screen at that moment, not a later slide. All three required.
 
 ---
 
 **Q3: "What action items or next steps were mentioned, and at what point in the meeting?"**
 
-![Q&A screenshot showing action items answer with Slide 1 and Slide 12 referenced alongside video frame](assets/screenshot_qa3.png)
-
+**Model output (actual response from Qwen2.5-Omni, sample_inputs/meeting.mp4 + Q1-2024-Earnings-Presentation.pdf):**
 ```
 Citations: 🕐 00:24 | 🕐 05:41 | 📊 Slide 1 | 📊 Slide 12
 
@@ -145,6 +146,8 @@ April 30, 2024. Attendees: Stuart Bradie, Mark Sopp, Jamie DuBray.
 
 [Quote: "The agenda contains seven items, including any other business."]
 ```
+
+![Q&A screenshot showing action items answer with Slide 1 and Slide 12 referenced alongside video frame](assets/screenshot_qa3.png)
 > **Why cross-modal:** WHEN the closing/action summary happened comes from the audio transcript [05:41]. WHO was responsible (Stuart Bradie CEO) requires matching the voice to the PDF title slide (Slide 1 lists his role). The video frame at [05:41] confirms the meeting was wrapping up. Audio alone gives the words but not the role; PDF alone gives the role but not the timing.
 
 ---
@@ -177,6 +180,12 @@ Each answer is **unanswerable from any single input** — it requires combining 
 - The grounding extraction regex patterns in `grounding.py`
 - All architectural decisions and their rationale
 - Error handling strategy (which errors to surface to UI vs. log only)
+
+**Where I overrode AI suggestions and why:**
+
+1. **AI suggested LangChain for the retrieval pipeline.** I rejected it. LangChain adds ~200MB of dependencies and wraps ChromaDB's native API behind abstractions that hide the metadata fields (timestamp, slide_number, speaker) I needed to pass through to grounding. Direct ChromaDB client gives full control over what goes into and comes out of each document — LangChain's `Document` format would have required re-serializing everything anyway.
+
+2. **AI generated a sentence-window chunker** that split transcript segments into individual sentences before indexing. I reverted to segment-level chunking (one Whisper segment = one ChromaDB document). Reason: Whisper already assigns timestamps and speaker labels per segment. Splitting a segment into sentences destroys the timestamp-to-speaker association — you'd lose the ability to say "[02:16] [Speaker 1] said X" and instead get orphaned sentences with no timing context.
 
 ---
 

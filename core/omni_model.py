@@ -120,12 +120,30 @@ class OmniModel:
         free, total = torch.cuda.mem_get_info()
         return free / 1e9
 
+    def _check_transformers_version(self) -> bool:
+        """Return True if transformers version supports Qwen2.5-Omni."""
+        try:
+            import transformers
+            from packaging.version import Version
+            if Version(transformers.__version__) < Version("4.51.0"):
+                logger.error(
+                    f"transformers {transformers.__version__} detected. "
+                    "Qwen2.5-Omni requires transformers>=4.51.0. "
+                    "Run: pip install 'transformers>=4.51.0'"
+                )
+                return False
+            return True
+        except Exception:
+            return True  # packaging not available, try anyway
+
     def _load_omni_8bit(self) -> bool:
         """
         Attempt to load Qwen2.5-Omni in 8-bit quantization.
 
         Returns True if successful, False otherwise.
         """
+        if not self._check_transformers_version():
+            return False
         try:
             from transformers import AutoProcessor, Qwen2_5OmniForConditionalGeneration
 
