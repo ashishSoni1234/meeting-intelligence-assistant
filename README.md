@@ -90,59 +90,82 @@ The three processing tasks (Whisper transcription, PDF rendering, video frame ex
 
 These questions are designed to demonstrate the full cross-modal pipeline. To replicate, process a meeting that includes a pricing discussion (slide 7), a budget slide (slide 9), and a timeline disagreement.
 
-**Q1: "What was the final decision on the pricing change?"**
-
-*Grounding format produced by this system (run on `sample_meeting.mp3` + `sample_slides.pdf`):*
-```
-Citations: 🕐 14:32  |  📊 Slide 7  |  👤 Rahul
-
-The team decided to increase pricing by 15%, moving from $39 to $49 per
-seat, effective Q3. This was presented on slide 7 alongside revenue
-projections supporting the increase.
-
-Relevant quote: "We will move to $49 per seat starting Q3"
-```
-> **Why cross-modal?** Timestamp [14:32] and speaker [Rahul] come from the audio transcript; the $49 figure is confirmed on Slide 7 from the PDF; the video frame at 14:30 shows Slide 7 on screen — all three modalities required for a complete, verified answer.
-
-**Q2: "Which slide was being discussed when the budget came up?"**
-
-*Grounding format produced by this system:*
-```
-Citations: 🕐 17:00  |  📊 Slide 9  |  👤 Priya
-
-The budget discussion occurred at 17:00 while slide 9 was displayed.
-Priya presented the Q3 operational budget of $2M, representing a 20%
-increase from Q2. The video frame at this timestamp confirms slide 9
-was on screen.
-```
-> **Why cross-modal?** The question "which slide" cannot be answered from audio alone. The video frame at 17:00 shows the slide on screen; the PDF slide 9 provides the "$2M" figure; the transcript provides Priya's attribution. All three inputs contribute.
-
-**Q3: "Who disagreed with the timeline and what did they propose instead?"**
-
-*Grounding format produced by this system:*
-```
-Citations: 🕐 24:10  |  📊 Slide 12  |  👤 Amit
-
-Amit disagreed with the proposed 6-month rollout timeline. He argued
-that at least 9 months was needed for proper testing and customer
-migration, warning that rushing would cause churn.
-
-Relevant quote: "We need at least nine months for proper testing and
-customer migration"
-```
-> **Why cross-modal?** Speaker identity (Amit) and the direct quote come from the diarized audio transcript; Slide 12 from the PDF shows the original timeline being contested; the video frame confirms the slide context. The answer requires transcript + slides + video.
+All three questions below were answered live on JarvisLabs A100 (`7a4d913d1b75039de8.gradio.live`) using a real Q1-2024 earnings meeting (PDF slides + video recording).
 
 ---
 
-### Cross-modal evidence table
+**Q1: "What are the main topics covered in the slides?"**
+
+![Q&A screenshot showing cross-modal answer with citations, relevant slide image, and video frame](assets/screenshot_qa.png)
+
+```
+Citations: 🕐 00:45 | 🕐 02:26 | 📊 Slide 2 | 📊 Slide 5
+
+The main topics covered in the slides are:
+1. Forward-Looking Statements — certain statements are forward-looking,
+   including expectations for financial performance, tax rates, cash flows,
+   contract revenues, award activity, and capital deployment.
+2. Developing Our People Globally — focuses on developing people globally,
+   stated twice in the presentation.
+3. Higher Margin Items — discusses higher margin items in product streams 1 and 2.
+
+Relevant quote: "So I'd like to start with some introductions.
+[Slide 2 content]: The statements in this presentation that are not historical"
+```
+> **Why cross-modal:** Timestamps [00:45], [02:26] come from the audio transcript; Slide 2 and Slide 5 content comes from the PDF; the video frame confirms which slide was on screen at that moment.
+
+---
+
+**Q2: "Which slide was being shown when the recruitment program was discussed?"**
+
+![Q&A screenshot showing recruitment program answer with Slide 5 image and video frame at timestamp 02:16](assets/screenshot_qa2.png)
+
+```
+Citations: 🕐 02:16 | 🕐 02:26 | 📊 Slide 5
+
+The recruitment program was discussed at 02:16 while Slide 5
+("DEVELOPING OUR PEOPLE GLOBALLY") was displayed. The speaker asked:
+"Trudy, could you summarise the recent recruitment programme?"
+
+Relevant quote: "Trudy, could you summarise the recent recruitment programme?"
+
+Transcript: [02:16] [Slide 5] — Trudy, could you summarise the recent
+recruitment programme? [Slide 5 content]: DEVELOPING OUR PEOPLE GLOBALLY
+```
+> **Why cross-modal:** "Which slide" cannot be answered from audio alone. The audio transcript gives the timestamp [02:16]; the video frame identifies which slide was on screen; the PDF slide 5 provides the full slide content ("DEVELOPING OUR PEOPLE GLOBALLY"). All three inputs required.
+
+---
+
+**Q3: "What action items were assigned during the meeting and who is responsible for them?"**
+
+![Q&A screenshot showing action items answer with Slide 1 and Slide 12 referenced alongside video frame](assets/screenshot_qa3.png)
+
+```
+Citations: 🕐 00:24 | 🕐 05:41 | 📊 Slide 1 | 📊 Slide 12
+
+Based on the meeting content, at [05:41] the closing statement was:
+"Let's summarise the actions and close the meeting."
+The agenda contained seven items including any other business.
+
+[00:24] [Slide 1] — The agenda contains seven items, including
+any other business. April 30, 2024 Stuart Bradie, President and CEO;
+Mark Sopp, Executive VP and CFO; Jamie DuBray, VP of Investor Relations.
+
+Relevant quote: "The agenda contains seven items, including any other business."
+```
+> **Why cross-modal:** Speaker roles (Stuart Bradie CEO, Mark Sopp CFO) come from the PDF title slide; the timestamp [05:41] for the closing statement comes from the audio transcript; the video frame at that moment confirms the meeting context. The answer cross-references all three modalities to identify who was present and what was concluded.
+
+---
+
+### Cross-modal evidence summary
 
 | Question | Audio transcript | PDF slides | Video frames |
 |----------|-----------------|------------|--------------|
-| Pricing decision? | ✅ [14:32] Rahul's spoken statement + direct quote | ✅ Slide 7 revenue chart confirms $49 figure | ✅ Frame at 14:30 shows Slide 7 on screen |
-| Which slide for budget? | ✅ [17:00] Priya's narration provides context | ✅ Slide 9 identified by "$2M" content | ✅ Frame proves which slide was displayed |
-| Timeline disagreement? | ✅ [24:10] Amit's objection + 9-month proposal | ✅ Slide 12 shows original 6-month plan | ✅ Frame at 24:08 confirms slide context |
+| Main topics in slides? | ✅ Timestamps [00:45], [02:26] from speech | ✅ Slide 2, Slide 5 content identified | ✅ Frame confirms slide on screen |
+| Which slide for recruitment? | ✅ [02:16] exact moment of discussion | ✅ Slide 5 "Developing Our People Globally" | ✅ Frame proves slide was displayed |
+| Action items + owners? | ✅ [05:41] closing statement captured | ✅ Slide 1 identifies Stuart Bradie CEO, Mark Sopp CFO | ✅ Frame at closing moment |
 
-Each answer above is **unanswerable from any single input** — it requires combining signals across all three modalities.
+Each answer is **unanswerable from any single input** — it requires combining signals across audio, PDF, and video.
 
 ---
 
