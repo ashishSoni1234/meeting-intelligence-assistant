@@ -1,70 +1,58 @@
 # Sample Inputs
 
-Three sample files are provided to let reviewers test the system immediately.
+Real meeting files provided for reviewers to test the system immediately — no setup needed.
 
 ## Files in this directory
 
 | File | Size | Description |
 |------|------|-------------|
-| `sample_meeting.mp3` | ~1 MB | Synthetic meeting audio (~3 min, covers pricing/budget/timeline) |
-| `sample_slides.pdf` | ~10 KB | 12-page presentation deck matching the audio content |
-| `sample_meeting.mp4` | generated | Run `python generate_sample_video.py` to create this from the audio |
+| `Q1-2024-Earnings-Presentation.pdf` | ~2.3 MB | KBR Q1-2024 earnings presentation, 21 pages — same as the screenshots in the main README |
+| `meeting.mp4` | ~19 MB | ~5 min real meeting recording matching the presentation |
 
-## Generate the video sample
+## How to run
 
-The video file is not committed (it is just audio + a static title frame, so
-it can be re-generated in seconds). From the project root:
+1. Start the app: `python app.py`
+2. Open the Gradio UI (port 7860)
+3. In **Upload & Process** tab:
+   - Upload `Q1-2024-Earnings-Presentation.pdf` in the PDF slot
+   - Upload `meeting.mp4` in the Video slot
+   - Leave the Audio slot empty (pipeline extracts audio from the video automatically)
+4. Click **Process Files**
+5. Switch to **Ask Questions** tab
 
-```bash
-python generate_sample_video.py
-```
-
-Requirements: `ffmpeg` on PATH + `Pillow` (already in `requirements.txt`).
-
-Install ffmpeg if needed:
-- **JarvisLabs / Ubuntu:** `sudo apt-get install -y ffmpeg`
-- **macOS:** `brew install ffmpeg`
-
-## Expected output after processing all three files
-
-When you upload all three files and click **Process Files**, you should see:
+## Expected output after processing
 
 ```
-✅ Processing complete in 8-12s | 12 slides | 6 frames | ~60-80 chunks indexed
+✅ Processing complete in ~23s | 21 slides | ~10 frames | ~198 chunks indexed
 ```
 
-Verified on JarvisLabs NVIDIA A100-PCIE-40GB (2026-05-28).
-
-Detailed breakdown:
+Verified on JarvisLabs NVIDIA A100-PCIE-40GB.
 
 | Component | Expected value |
 |-----------|----------------|
-| Slides extracted | 12 pages |
-| Video frames (30s interval) | ~6 (for ~3 min audio) |
-| Slide transitions detected | ~2–3 |
-| ChromaDB chunks indexed | ~60–80 |
-| Processing time (A100) | ~8–12s |
-| Processing time (CPU) | ~2–4 min |
+| Slides extracted | 21 pages |
+| Video frames (30s interval) | ~10 |
+| Slide transitions detected | ~3–5 |
+| ChromaDB chunks indexed | ~150–200 |
+| Processing time (A100) | ~20–25s |
+| Processing time (CPU) | ~5–8 min |
 
 ## The three demo questions
 
-These questions match the sample audio content exactly:
+These questions match the sample files and are the same ones shown in the README screenshots:
 
-1. **"What was the final decision on the pricing change?"**
-   - Answer should cite: Slide 7, timestamp ~14:32, speaker Rahul, quote "$49 per seat"
+1. **"Which slide was being shown when the recruitment program was discussed?"**
+   - Expected: Slide 5 cited, timestamp ~02:16, video frame proves slide on screen
 
-2. **"Which slide was being discussed when the budget came up?"**
-   - Answer should cite: Slide 9, timestamp ~17:00, speaker Priya, "$2M Q3 budget"
+2. **"Who were the presenters at this meeting and what roles do the slides assign them?"**
+   - Expected: Stuart Bradie CEO, Mark Sopp CFO — roles from Slide 1, voice from audio
 
-3. **"Who disagreed with the timeline and what did they propose instead?"**
-   - Answer should cite: Slide 12, timestamp ~24:10, speaker Amit, "9 months"
+3. **"What action items or next steps were mentioned, and at what point in the meeting?"**
+   - Expected: Timestamp ~05:41 cited, Slide 1 and Slide 12 referenced
 
 ## Bring your own files
 
-The system works with any meeting content. Recommended specs:
-
-- **Audio:** MP3/WAV/M4A, 5–60 minutes
+The system works with any meeting content:
 - **PDF:** Any presentation, 5–30 slides
-- **Video:** MP4/MOV, screen recording or camera recording
-
-For best cross-modal results, the audio and slides should be from the same meeting.
+- **Video:** MP4/MOV screen recording or camera recording (audio extracted automatically)
+- **Audio (optional):** Upload a separate MP3/WAV if you want speaker diarization without a video

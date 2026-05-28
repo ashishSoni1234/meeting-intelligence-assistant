@@ -52,9 +52,9 @@ _last_qa_result: Optional[QAResult] = None
 # Example questions (pre-loaded for quick demo)
 # ─────────────────────────────────────────────────────────────────
 EXAMPLE_QUESTIONS = [
-    "What was the final decision on the pricing change?",
-    "Which slide was being discussed when the budget came up?",
-    "Who disagreed with the timeline and what did they propose instead?",
+    "Which slide was being shown when the recruitment program was discussed?",
+    "Who were the presenters at this meeting and what roles do the slides assign them?",
+    "What action items or next steps were mentioned, and at what point in the meeting?",
 ]
 
 
